@@ -21,8 +21,8 @@ namespace WindowsFormsApp4
             CefSettings settings = new CefSettings();
             CefSharp.Cef.Initialize(settings);
 
-            // 指定html位置
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\@tinymce\index.html";  // 这里注意parent搭配获取目录的方法，index.html是放在项目sln文件同目录内@tiny_mce文件夹里面的。
+            // 指定html位置。注意：如果在配置管理器修改了参数（比如x64），可能导致调试时无法通过如下方法获取index.html文件的正确路径，可以删除一个“.Parent"再试，也可以用MessageBox.Show(url)打印路径确认文件位置是否正确。
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\@tinymce\index.html";  // 这里注意parent搭配获取目录的方法，index.html是放在项目sln文件同目录内@tiny_mce文件夹里面的。
             // string path = Path.GetFullPath("D:\\GitHub\\WindowsFormsApp4\\@tinymce\\index.html");
             string url = "file://" + path;
             // MessageBox.Show(url);
