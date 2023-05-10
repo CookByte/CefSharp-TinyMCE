@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html style="overflow: hidden;">
+<head>
+    <script src='tinymce.min.js'></script> 
+    <script src="langs/zh_CN.js"></script>
+    <script type="text/javascript">
+      tinymce.init({
+        // mode : "exact",
+        // elements : "mytextarea",
+        selector: '#mytextarea',        
+        language: 'zh_CN',
+        menubar: false,  //不想要文件那一栏
+        // toolbar: false, //不想要加粗那一栏
+        promotion: false,  //去掉右上角⚡️Upgrade更新提醒按钮
+        resize:true,  //右下角有一个拖动标记，true（仅允许改变高度）, false（完全不让你动）, 'both'（宽高都能改变，注意引号）
+        // width: 300,  //默认宽度，单位为像素（px）
+        // height: 300,  //默认高度
+        // statusbar: false  //隐藏状态栏，指的是编辑器最底下、左侧显示dom信息、右侧显示Tiny版权链接和调整大小的那一行。
+        branding: false,  //设为false时，隐藏编辑器界面右下角的“Powered by Tiny”（官方汉化为：由Tiny驱动）字样。(状态栏右侧)
+        plugin: 'textpattern',  //插件，支持简单的Markdown语法
+        textpattern_patterns: [
+          {start: '*', end: '*', format: 'italic'},
+          {start: '**', end: '**', format: 'bold'},
+          {start: '#', format: 'h1'},
+          {start: '##', format: 'h2'},
+          {start: '###', format: 'h3'},
+          {start: '####', format: 'h4'},
+          {start: '#####', format: 'h5'},
+          {start: '######', format: 'h6'},
+          {start: '1. ', cmd: 'InsertOrderedList'},
+          {start: '* ', cmd: 'InsertUnorderedList'},
+          {start: '- ', cmd: 'InsertUnorderedList'}
+          ]  
+        });
+
+      // 根据输入框1的数值动态更新输入框2和编辑器高度（每隔300ms,非实时)
+      setInterval(() => {
+        const formHeight = document.querySelector('#idcardmsg').value;
+        document.querySelector('#idcardmsg2').value = formHeight;
+        // 使用最新 formHeight 设置TinyMCE编辑框的高度
+        // tinymce.activeEditor.editorContainer.style.height = (formHeight -300) + 'px';   //动态更新编辑器的高度，公式可以按需调整，目的是确保底部“提交”按钮在合适的位置（非实时，若需要实时调整编辑器高度，可以注释掉此处代码，然后启用C#代码倒数第2行。这里只是展示一个方法）
+      }, 300);  //300毫秒
+
+      </script>
+
+</head>
+<body >
+    <div>
+      输入框1<textarea id="idcardmsg">abc</textarea>（窗体大小调整时，会把窗体高度值更新到这里 ——实时更新）
+      </br>
+      输入框2<textarea id="idcardmsg2"></textarea>（=输入框1的值，自动更新 ——非实时更新，快速调整窗口高度时可以看出效果差异）
+    </div>
+    <div>
+      <button onclick="test1()">测试弹出框</button>(读取输入框1的值传递给C#进行winform弹窗)
+      </br>
+      <button onclick="test2()">读取信息</button>(读取C#定义的参数值，然后进行js弹窗)
+    </div>
+    <h1>TinyMCE快速开始示例</h1>
+    <form id="myForm" method="post">
+      <textarea id="mytextarea" name="TextAreaContent">编辑框：Hello, World!（编辑框的高度会随着窗体高度动态调整）</textarea>
+      <!-- //button放在form里面，如果不加“;return false;”，点击提交后会清空数据。 -->
+      <button onclick="formSubmit();return false;" type="submit" >提交</button>
+    </form>
+
+    <script>
+  
+      function test1() {
+      var idcardmsg = document.getElementById("idcardmsg").value;
+          JsObj.showMsg(idcardmsg);
+      };
+      
+      function test2() {
+          var result = JsObj.readMessage();
+          alert("js弹窗："+result);
+      };
+
+      function formSubmit() {
+          // var msg_content = document.getElementById("mytextarea").value;  //这个原生方法，获取的编辑框原值，不是编辑器最新值
+          // var msg_content = tinyMCE.activeEditor.getContent();  //这个是编辑器方法，获取的是带有<p>的HTML格式内容
+          // 获取编辑器不带HTML标记的纯文本内容的方法：
+          var activeEditor = tinymce.activeEditor;
+          var editBody = activeEditor.getBody();
+          activeEditor.selection.select(editBody);
+          var msg_content = activeEditor.selection.getContent( { 'format' : 'text' } );
+          var msg_alert = "提交成功，\n内容是："+ msg_content;
+          JsObj.showMsg(msg_alert);
+      };
+
+    </script>
+
+</body>
+</html>
