@@ -22,7 +22,7 @@ namespace WindowsFormsApp4
             CefSharp.Cef.Initialize(settings);
 
             // 指定html位置
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\@tinymce\index.html";  // 这里注意2个parent搭配获取目录的方法，index.html是放在项目sln文件同目录内@tiny_mce文件夹里面的。
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\@tinymce\index.html";  // 这里注意parent搭配获取目录的方法，index.html是放在项目sln文件同目录内@tiny_mce文件夹里面的。
             // string path = Path.GetFullPath("D:\\GitHub\\WindowsFormsApp4\\@tinymce\\index.html");
             string url = "file://" + path;
             // MessageBox.Show(url);
